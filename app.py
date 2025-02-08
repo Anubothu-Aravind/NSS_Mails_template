@@ -77,17 +77,26 @@ outlook_user = st.text_input("Outlook Email Address", "")
 outlook_password = st.text_input("Outlook Password", "", type="password")
 
 # Upload CSV
+# Upload CSV or Excel
 uploaded_file = st.file_uploader(
-    "Upload CSV file (with event_name, venue, Time, event_incharge_name, student_id_number)",
-    type=["csv"]
+    "Upload CSV or Excel file (with event_name, venue, Time, event_incharge_name, student_id_number)",
+    type=["csv", "xlsx", "xls"]
 )
 
 if uploaded_file:
-    data = pd.read_csv(uploaded_file)
+    try:
+        if uploaded_file.name.endswith(".csv"):
+            data = pd.read_csv(uploaded_file)
+        else:
+            data = pd.read_excel(uploaded_file, engine="openpyxl")  # Ensure 'openpyxl' is installed for xlsx
+        
+        # Strip spaces from column names
+        data.columns = data.columns.str.strip()
+        
+        st.write("📂 Uploaded Data Preview:", data.head())
 
-    # Strip spaces from column names
-    data.columns = data.columns.str.strip()
-
+    except Exception as e:
+        st.error(f"❌ Error reading file: {e}")
     emails = []
 
     for _, row in data.iterrows():
