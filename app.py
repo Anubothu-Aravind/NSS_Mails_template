@@ -170,6 +170,9 @@ if uploaded_file:
                 msg["From"] = outlook_user
                 msg["To"] = row["To"]
                 msg["CC"] = cc_email
+                msg["X-Priority"] = "1"  # High Priority
+                msg["X-MSMail-Priority"] = "High"  # High Priority for Outlook
+                msg["Importance"] = "High"  # High Priority for Email Clients
                 msg.attach(MIMEText(row["Body"], "html"))
                 recipients = [row["To"], cc_email]
 
