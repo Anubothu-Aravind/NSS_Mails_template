@@ -46,10 +46,12 @@ html_template = """
     </style>
 </head>
 <body>
-    <div class="email-container">
-        <div class="header">
-            <h1>Venue Notification</h1>
-        </div>
+    <div class="header">
+    <img src="https://i.imgur.com/jkpf1qu.png" alt="NSS Logo" width="200" 
+         style="display: block; margin: 0 auto; padding-bottom: 5px;">
+    <h1 style="margin-top: 0;">Venue Notification</h1>
+</div>
+
         <div class="content">
             <p>This is to inform you that the venue for the <b>[event_name]</b> has been updated to <b>[venue]</b>.</p>
             <p>Kindly ensure your presence at the updated venue by <b>[Time]</b> sharp.</p>
@@ -118,7 +120,7 @@ if uploaded_file:
 
     # Button to send emails
     if st.button("Send Emails"):
-        cc_email = "vjoenithin@kluniversity.in"  # CC recipient
+        cc_email = "2200080137@kluniversity.in"  # CC recipient
         for _, row in emails_df.iterrows():
             try:
                 msg = MIMEMultipart()
