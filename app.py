@@ -3,6 +3,54 @@ import pandas as pd
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import io
+
+st.set_page_config(page_title="NSS Email Notification System")
+# Streamlit app
+st.title("Automated Email Notification System")
+
+# User inputs for email credentials
+outlook_user = st.text_input("Outlook Email Address", "")
+outlook_password = st.text_input("Outlook Password", "", type="password")
+
+with st.sidebar:
+    st.header("Instructions")
+    st.write("""
+    - Your file **must contain** the following columns:
+      - `event_name`: Name of the event  
+      - `venue`: Location of the event  
+      - `Time`: Event start time  
+      - `event_incharge_name`: Name of the event in-charge  
+      - `student_id_number`: Student’s university ID  
+    - **Do not include extra columns or empty rows.**
+    - The system will generate emails using `student_id_number@kluniversity.in`.
+    """)
+    # Create a sample dataframe
+    sample_data = pd.DataFrame({
+        "event_name": ["Tech Talk", "AI Workshop"],
+        "venue": ["Indoor Stadium", "Lab 205"],
+        "Time": ["1:30 PM", "2:00 PM"],
+        "event_incharge_name": ["Aravind", "Rahul"],
+        "student_id_number": ["2200080234", "2200080456"]
+    })
+
+    # Convert to CSV
+    csv_buffer = io.StringIO()
+    sample_data.to_csv(csv_buffer, index=False)
+    csv_data = csv_buffer.getvalue()
+
+    # Streamlit UI
+    st.markdown("### 📥 Download Sample CSV")
+    st.write("Ensure your file follows this format:")
+    st.dataframe(sample_data)
+
+    # Add download button
+    st.download_button(
+        label="📂 Download Sample CSV",
+        data=csv_data,
+        file_name="sample_event_data.csv",
+        mime="text/csv"
+    )
 
 # Define the email template
 html_template = """
@@ -65,21 +113,12 @@ html_template = """
             <p>For more details</p> 
             <p>Visit our Instagram: <a href="https://www.instagram.com/klef_nss_official/">@klef_nss_official</a></p>
             <p>Join our Telegram: <a href="https://t.me/+k_Bt9R_WDxVjNGJl">@KLEF_NSS_Y23 BATCH</a></p>
-            <br>
         </div>
     </div>
 </body>
 </html>
 """
-st.set_page_config(page_title="NSS Email Notification System")
-# Streamlit app
-st.title("Automated Email Notification System")
 
-# User inputs for email credentials
-outlook_user = st.text_input("Outlook Email Address", "")
-outlook_password = st.text_input("Outlook Password", "", type="password")
-
-# Upload CSV
 # Upload CSV or Excel
 uploaded_file = st.file_uploader(
     "Upload CSV or Excel file (with event_name, venue, Time, event_incharge_name, student_id_number)",
@@ -103,11 +142,10 @@ if uploaded_file:
     emails = []
 
     for _, row in data.iterrows():
-        email_body = html_template.replace("[event_name]", row.get("event_name", "N/A")) \
-            .replace("[venue]", row.get("venue", "N/A")) \
-            .replace("[Time]", row.get("Time", "N/A")) \
-            .replace("[event_incharge_name]", row.get("event_incharge_name", "N/A"))
-
+        email_body = html_template.replace("[event_name]", str(row.get("event_name", "N/A"))) \
+            .replace("[venue]", str(row.get("venue", "N/A"))) \
+            .replace("[Time]", str(row.get("Time", "N/A"))) \
+            .replace("[event_incharge_name]", str(row.get("event_incharge_name", "N/A")))
         student_email = f"{row.get('student_id_number', 'unknown')}@kluniversity.in"
 
         emails.append({
