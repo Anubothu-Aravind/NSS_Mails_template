@@ -65,6 +65,7 @@ html_template = """
             <p>For more details</p> 
             <p>Visit our Instagram: <a href="https://www.instagram.com/klef_nss_official/">@klef_nss_official</a></p>
             <p>Join our Telegram: <a href="https://t.me/+k_Bt9R_WDxVjNGJl">@KLEF_NSS_Y23 BATCH</a></p>
+            <br>
         </div>
     </div>
 </body>
