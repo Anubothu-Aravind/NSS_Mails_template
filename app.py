@@ -68,7 +68,7 @@ html_template = """
 </body>
 </html>
 """
-
+st.set_page_config(page_title="NSS Email Notification System")
 # Streamlit app
 st.title("Automated Email Notification System")
 
