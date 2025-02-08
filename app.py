@@ -89,10 +89,10 @@ if uploaded_file:
             data = pd.read_csv(uploaded_file)
         else:
             data = pd.read_excel(uploaded_file, engine="openpyxl")  # Ensure 'openpyxl' is installed for xlsx
-        
+
         # Strip spaces from column names
         data.columns = data.columns.str.strip()
-        
+
         st.write("📂 Uploaded Data Preview:", data.head())
 
     except Exception as e:
