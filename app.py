@@ -131,3 +131,14 @@ if uploaded_file:
                 st.success(f"📩 High Priority Email sent successfully to {row['To']} (CC: {cc_email})")
             except Exception as e:
                 st.error(f"❌ Failed to send email to {row['To']}. Error: {e}")
+
+# Footer
+st.markdown("---")
+st.markdown("""
+    <p style='text-align:center; font-size:14px; color:gray;'>
+        Made with ❤️ from <b>Intelligentsia Club</b><br>
+        Department of AI & DS<br><br>
+        Developed by <b>Aravind</b> (2200080137)<br>
+        Contact: <a href='https://t.me/iarvn1' target='_blank'>@iarvn1</a> on Telegram
+    </p>
+""", unsafe_allow_html=True)
