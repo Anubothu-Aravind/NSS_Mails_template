@@ -62,7 +62,7 @@ html_template = """
 
         <div class="content">
             <p>This is to inform you that the venue for the <b>[event_name]</b> has been updated to <b>[venue]</b>.</p>
-            <p>Kindly ensure your presence at the updated venue by <b>[Time]</b> sharp.</p>
+            <p>Kindly ensure your presence at the updated venue by <b>[Time]</b>,<b>[Date]</b> sharp.</p>
             <p>We appreciate your cooperation and look forward to your enthusiastic participation.</p>
             <p>Best regards,<br>
             <b>[event_incharge_name]</b><br>
@@ -96,8 +96,9 @@ with st.sidebar:
         "event_name": ["Tech Talk", "AI Workshop"],
         "venue": ["Indoor Stadium", "Lab 205"],
         "Time": ["1:30 PM", "2:00 PM"],
+        "Date": ["20/02/2025","21/03/2025"],
         "event_incharge_name": ["Aravind", "Rahul"],
-        "student_id_number": ["2200080234", "2200080456"]
+        "student_id_number": ["2200080234", "2300080456"]
     })
 
     # Convert to CSV
@@ -122,7 +123,7 @@ with st.sidebar:
 
 # Upload CSV or Excel
 uploaded_file = st.file_uploader(
-    "Upload CSV or Excel file (with event_name, venue, Time, event_incharge_name, student_id_number)",
+    "Upload CSV or Excel file (with event_name, venue, Time, Date, event_incharge_name, student_id_number)",
     type=["csv", "xlsx", "xls"]
 )
 
@@ -137,7 +138,7 @@ if uploaded_file:
         data.columns = data.columns.str.strip()
 
         # Drop rows where essential fields are NaN
-        required_columns = ["event_name", "venue", "Time", "event_incharge_name", "student_id_number"]
+        required_columns = ["event_name", "venue", "Time", "Date","event_incharge_name", "student_id_number"]
         data = data.dropna(subset=required_columns)
 
         data['student_id_number'] = data['student_id_number'].astype(str).str.strip()
@@ -152,12 +153,13 @@ if uploaded_file:
         email_body = html_template.replace("[event_name]", str(row.get("event_name"))) \
             .replace("[venue]", str(row.get("venue"))) \
             .replace("[Time]", str(row.get("Time"))) \
+            .replace("[Date]", str(row.get("Date"))) \
             .replace("[event_incharge_name]", str(row.get("event_incharge_name")))
         student_email = f"{row.get('student_id_number')}@kluniversity.in"
 
         emails.append({
             "To": student_email,
-            "Subject": f"Venue Update for {row.get('event_name', 'Unknown Event')}",
+            "Subject": f"Venue Update for {row.get('event_name', 'Unknown Event')} on {row.get('Date','unknown Date')}",
             "Body": email_body
         })
 
@@ -166,7 +168,7 @@ if uploaded_file:
 
     # Button to send emails
     if st.button("Send Emails"):
-        cc_email = "vjoenithin@kluniversity.in"  # CC recipient
+        cc_email = "2200080137@kluniversity.in"  # CC recipient
         for _, row in emails_df.iterrows():
             try:
                 msg = MIMEMultipart()
