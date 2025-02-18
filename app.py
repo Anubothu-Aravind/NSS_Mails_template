@@ -3,6 +3,8 @@ import pandas as pd
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 import io
 
 st.set_page_config(page_title="NSS Email Notification System")
@@ -121,11 +123,17 @@ with st.sidebar:
     )
 
 
-
 # Upload CSV or Excel
 uploaded_file = st.file_uploader(
     "Upload CSV or Excel file (with event_name, venue, Time, Date, event_incharge_name, student_id_number)",
     type=["csv", "xlsx", "xls"]
+)
+
+# File uploader for PDF or DOCX
+attachment_files = st.file_uploader(
+    "Upload a PDF, DOCX, JPEG, PNG, or other file for permissions as an attachment (optional)", 
+    type=None,  # Allow all file types
+    accept_multiple_files=True
 )
 
 if uploaded_file:
@@ -182,7 +190,14 @@ if uploaded_file:
                 msg["Importance"] = "High"  # High Priority for Email Clients
                 msg.attach(MIMEText(row["Body"], "html"))  # Use "html" instead of "plain"
                 recipients = [row["To"], cc_email]  # Include both main recipient and CC
-
+                if attachment_file is not None:
+                    part = MIMEBase("application", "octet-stream")
+                    part.set_payload(attachment_file.read())
+                    encoders.encode_base64(part)
+                    part.add_header("Content-Disposition", f"attachment; filename={attachment_file.name}")
+                    msg.attach(part)
+                    attachment_file.seek(0)
+                
                 with smtplib.SMTP("smtp-mail.outlook.com", 587) as server:
                     server.starttls()
                     server.login(outlook_user, outlook_password)
