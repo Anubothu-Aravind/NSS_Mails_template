@@ -190,13 +190,15 @@ if uploaded_file:
                 msg["Importance"] = "High"  # High Priority for Email Clients
                 msg.attach(MIMEText(row["Body"], "html"))  # Use "html" instead of "plain"
                 recipients = [row["To"], cc_email]  # Include both main recipient and CC
-                if attachment_file is not None:
-                    part = MIMEBase("application", "octet-stream")
-                    part.set_payload(attachment_file.read())
-                    encoders.encode_base64(part)
-                    part.add_header("Content-Disposition", f"attachment; filename={attachment_file.name}")
-                    msg.attach(part)
-                    attachment_file.seek(0)
+                if attachment_file:
+                    for file in attachment_file:  # Loop through multiple files
+                        part = MIMEBase("application", "octet-stream")
+                        part.set_payload(file.read())  # Read each file
+                        encoders.encode_base64(part)
+                        part.add_header("Content-Disposition", f"attachment; filename={file.name}")
+                        msg.attach(part)
+                        file.seek(0)  # Reset file pointer
+
                 
                 with smtplib.SMTP("smtp-mail.outlook.com", 587) as server:
                     server.starttls()
