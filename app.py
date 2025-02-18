@@ -177,7 +177,7 @@ if uploaded_file:
 
     # Button to send emails
     if st.button("Send Emails"):
-        cc_email = "2200080137@kluniversity.in"  # CC recipient
+        cc_email = "vjoenithin@kluniversity.in"  # CC recipient
         for _, row in emails_df.iterrows():
             try:
                 msg = MIMEMultipart()
