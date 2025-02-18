@@ -88,6 +88,7 @@ with st.sidebar:
       - `Time`: Event start time  
       - `event_incharge_name`: Name of the event in-charge  
       - `student_id_number`: Student’s university ID  
+      - `Date` : Date of the event
     - **Do not include extra columns or empty rows.**
     - The system will generate emails using `student_id_number@kluniversity.in`.
     """)
