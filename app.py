@@ -130,7 +130,7 @@ uploaded_file = st.file_uploader(
 )
 
 # File uploader for PDF or DOCX
-attachment_files = st.file_uploader(
+attachment_file = st.file_uploader(
     "Upload a PDF, DOCX, JPEG, PNG, or other file for permissions as an attachment (optional)", 
     type=None,  # Allow all file types
     accept_multiple_files=True
